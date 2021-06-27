@@ -8,46 +8,46 @@ class ProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var product = Provider.of<Product>(context, listen: false);
     return Material(
       elevation: 8.0,
       borderRadius: BorderRadius.circular(10.0),
       child: ClipRRect(
-          borderRadius: BorderRadius.circular(10.0),
-          child: Consumer<Product>(
-            builder: (ctx, product, _) {
-              return GridTile(
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).pushNamed(ProductDetailPage.routeName,
-                        arguments: product.id);
-                  },
-                  child: Image.network(
-                    product.imageUrl,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                footer: GridTileBar(
-                  backgroundColor: Colors.black87,
-                  leading: IconButton(
-                    color: Theme.of(context).accentColor,
-                    onPressed: product.toggleFavoriteStatus,
-                    icon: Icon(product.isFavorite
-                        ? Icons.favorite
-                        : Icons.favorite_border_outlined),
-                  ),
-                  title: Text(
-                    product.title,
-                    textAlign: TextAlign.center,
-                  ),
-                  trailing: IconButton(
-                    color: Theme.of(context).accentColor,
-                    onPressed: () {},
-                    icon: Icon(Icons.shopping_cart),
-                  ),
-                ),
-              );
+        borderRadius: BorderRadius.circular(10.0),
+        child: GridTile(
+          child: GestureDetector(
+            onTap: () {
+              Navigator.of(context).pushNamed(ProductDetailPage.routeName,
+                  arguments: product.id);
             },
-          )),
+            child: Image.network(
+              product.imageUrl,
+              fit: BoxFit.cover,
+            ),
+          ),
+          footer: GridTileBar(
+            backgroundColor: Colors.black87,
+            leading: Consumer<Product>(
+              builder: (ctx, product, _) => IconButton(
+                color: Theme.of(context).accentColor,
+                onPressed: product.toggleFavoriteStatus,
+                icon: Icon(product.isFavorite
+                    ? Icons.favorite
+                    : Icons.favorite_border_outlined),
+              ),
+            ),
+            title: Text(
+              product.title,
+              textAlign: TextAlign.center,
+            ),
+            trailing: IconButton(
+              color: Theme.of(context).accentColor,
+              onPressed: () {},
+              icon: Icon(Icons.shopping_cart),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
