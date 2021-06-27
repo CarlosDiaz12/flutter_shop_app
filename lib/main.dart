@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_shop_app/config/app_theme.dart';
+import 'package:flutter_shop_app/pages/product_detail_page.dart';
+import 'package:flutter_shop_app/pages/products_overview_page.dart';
 
 void main() {
   runApp(App());
@@ -9,28 +12,10 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Shop App',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: HomePage(),
-    );
-  }
-}
-
-class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text('Shop App'),
-      ),
-      body: SafeArea(
-          child: Center(
-        child: Text('Shop App'),
-      )),
+      theme: AppTheme.theme,
+      home: ProductsOverViewPage(),
+      initialRoute: ProductsOverViewPage.routeName,
+      routes: {ProductDetailPage.routeName: (ctx) => ProductDetailPage()},
     );
   }
 }
