@@ -1,6 +1,6 @@
 import 'package:flutter_shop_app/providers/product.dart';
 
-const DUMMY_PRODUCTS = const [
+List<Product> DUMMY_PRODUCTS = [
   Product(
     id: 'p1',
     title: 'Red Shirt',
