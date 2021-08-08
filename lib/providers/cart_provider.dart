@@ -5,6 +5,18 @@ class CartProvider with ChangeNotifier {
   Map<String, CartItem> _cartItems = {};
   Map<String, CartItem> get cartItems => {..._cartItems};
 
+  int get itemCount {
+    return _cartItems.length;
+  }
+
+  double get totalAmount {
+    var total = 0.0;
+    _cartItems.forEach((key, value) {
+      total += value.price * value.quantity;
+    });
+    return total;
+  }
+
   void addItem(
       {required String productId,
       required String title,
@@ -28,5 +40,6 @@ class CartProvider with ChangeNotifier {
             price: price),
       );
     }
+    notifyListeners();
   }
 }
