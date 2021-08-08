@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_shop_app/providers/cart_provider.dart';
+import 'package:flutter_shop_app/providers/orders_provider.dart';
 import 'package:flutter_shop_app/widgets/cart_item.dart';
 import 'package:provider/provider.dart';
 
@@ -42,7 +43,15 @@ class CartPage extends StatelessWidget {
                     ),
                   ),
                   OutlinedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      var orders =
+                          Provider.of<OrdersProvider>(context, listen: false);
+                      orders.addOrder(
+                        cart.cartItems.values.toList(),
+                        cart.totalAmount,
+                      );
+                      cart.clearCart();
+                    },
                     child: Text('ORDER NOW'),
                   )
                 ],
@@ -53,8 +62,10 @@ class CartPage extends StatelessWidget {
           Expanded(
             child: ListView.builder(
               itemCount: cart.cartItems.length,
-              itemBuilder: (ctx, index) =>
-                  CartItemWidget(item: cart.cartItems.values.toList()[index]),
+              itemBuilder: (ctx, index) => CartItemWidget(
+                item: cart.cartItems.values.toList()[index],
+                productId: cart.cartItems.keys.toList()[index],
+              ),
             ),
           )
         ],
