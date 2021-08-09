@@ -1,5 +1,6 @@
 import 'package:flutter_shop_app/providers/product.dart';
 
+// ignore: non_constant_identifier_names
 List<Product> DUMMY_PRODUCTS = [
   Product(
     id: 'p1',

@@ -30,6 +30,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   # state management
   provider: ^5.0.0
+  dependencies:
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:

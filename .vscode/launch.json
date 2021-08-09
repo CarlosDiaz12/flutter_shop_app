@@ -5,17 +5,32 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Dev",
+            "name": "Emulator - Debug",
             "request": "launch",
             "type": "dart",
             "flutterMode": "debug",
             "deviceId": "emulator"
         },
         {
-            "name": "flutter_shop_app Profile",
+            "name": "Emulator - Profile",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "profile"
-        }
+            "flutterMode": "profile",
+            "deviceId": "emulator"
+        },
+        {
+            "name": "Emulator - Release",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release",
+            "deviceId": "emulator"
+        },
+        {
+            "name": "Windows - Debug",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "debug",
+            "deviceId": "windows"
+        },
     ]
 }

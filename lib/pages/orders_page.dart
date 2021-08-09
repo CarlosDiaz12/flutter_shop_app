@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_shop_app/providers/orders_provider.dart';
+import 'package:flutter_shop_app/widgets/app_drawer.dart';
+import 'package:flutter_shop_app/widgets/order_item_widget.dart';
+import 'package:provider/provider.dart';
 
 class OrdersPage extends StatelessWidget {
   static const routeName = '/orders-page';
@@ -11,8 +15,14 @@ class OrdersPage extends StatelessWidget {
         centerTitle: true,
         title: Text('My Orders'),
       ),
-      body: Center(
-        child: Text('My orders page'),
+      drawer: AppDrawer(),
+      body: Consumer<OrdersProvider>(
+        builder: (ctx, order, _) => ListView.builder(
+          itemCount: order.orders.length,
+          itemBuilder: (ctx, index) => OrderItemWidget(
+            item: order.orders[index],
+          ),
+        ),
       ),
     );
   }

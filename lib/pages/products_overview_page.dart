@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_shop_app/pages/cart_page.dart';
 import 'package:flutter_shop_app/providers/cart_provider.dart';
+import 'package:flutter_shop_app/widgets/app_drawer.dart';
 import 'package:flutter_shop_app/widgets/badge.dart';
 import 'package:flutter_shop_app/widgets/products_grid.dart';
 import 'package:provider/provider.dart';
@@ -65,6 +66,7 @@ class _ProductsOverViewPageState extends State<ProductsOverViewPage> {
           ),
         ],
       ),
+      drawer: AppDrawer(),
       body: ProductsGrid(showOnlyFavorites: _showOnlyFavorites),
     );
   }

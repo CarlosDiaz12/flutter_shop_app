@@ -36,7 +36,7 @@ class CartPage extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: Chip(
                       label: Text(
-                        '\$ ${cart.totalAmount}',
+                        '\$ ${cart.totalAmount.toStringAsFixed(2)}',
                         style: TextStyle(color: Colors.white),
                       ),
                       backgroundColor: Theme.of(context).primaryColor,
