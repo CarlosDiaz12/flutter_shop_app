@@ -32,5 +32,40 @@
             "flutterMode": "debug",
             "deviceId": "windows"
         },
+        {
+            "name": "Windows - Profile",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile",
+            "deviceId": "windows"
+        },
+        {
+            "name": "Windows - Release",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release",
+            "deviceId": "windows"
+        },
+        {
+            "name": "Web - Debug",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "debug",
+            "deviceId": "chrome"
+        },
+        {
+            "name": "Web - Profile",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile",
+            "deviceId": "chrome"
+        },
+        {
+            "name": "Web - Release",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release",
+            "deviceId": "chrome"
+        },
     ]
 }
