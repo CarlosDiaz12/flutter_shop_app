@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_shop_app/config/app_theme.dart';
 import 'package:flutter_shop_app/pages/cart_page.dart';
+import 'package:flutter_shop_app/pages/edit_product_page.dart';
 import 'package:flutter_shop_app/pages/orders_page.dart';
 import 'package:flutter_shop_app/pages/product_detail_page.dart';
 import 'package:flutter_shop_app/pages/products_overview_page.dart';
@@ -40,6 +41,7 @@ class App extends StatelessWidget {
           CartPage.routeName: (ctx) => CartPage(),
           OrdersPage.routeName: (ctx) => OrdersPage(),
           UserProductsPage.routeName: (ctx) => UserProductsPage(),
+          EditProductPage.routeName: (ctx) => EditProductPage(),
         },
       ),
     );

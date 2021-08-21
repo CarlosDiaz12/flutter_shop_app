@@ -4,6 +4,8 @@ import 'package:flutter_shop_app/widgets/app_drawer.dart';
 import 'package:flutter_shop_app/widgets/user_product_item.dart';
 import 'package:provider/provider.dart';
 
+import 'edit_product_page.dart';
+
 class UserProductsPage extends StatelessWidget {
   static const routeName = '/user-products-page';
   const UserProductsPage({Key? key}) : super(key: key);
@@ -17,7 +19,9 @@ class UserProductsPage extends StatelessWidget {
         title: const Text('User Products'),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).pushNamed(EditProductPage.routeName);
+            },
             icon: const Icon(Icons.add),
           ),
         ],
