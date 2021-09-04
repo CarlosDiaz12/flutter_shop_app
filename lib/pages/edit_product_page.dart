@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_shop_app/providers/product.dart';
+import 'package:flutter_shop_app/providers/products_provider.dart';
+import 'package:provider/provider.dart';
 
 class EditProductPage extends StatefulWidget {
   static const routeName = '/edit-product-page';
@@ -12,14 +14,53 @@ class EditProductPage extends StatefulWidget {
 class _EditProductPageState extends State<EditProductPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _imageUrlCtrl = TextEditingController();
-  var _product =
-      Product(id: '', title: '', description: '', price: 0, imageUrl: '');
+  var _product = Product(
+    id: '',
+    title: '',
+    description: '',
+    price: 0,
+    imageUrl: '',
+    isFavorite: false,
+  );
+
+  var _isInit = true;
+
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      var productId = ModalRoute.of(context)!.settings.arguments as String?;
+      if (productId != null) {
+        var product = Provider.of<ProductsProvider>(context, listen: false)
+            .getProductById(productId);
+        _product = product;
+        _imageUrlCtrl.text = _product.imageUrl;
+      }
+    }
+
+    _isInit = false;
+    super.didChangeDependencies();
+  }
+
   void _saveForm() {
-    _formKey.currentState!.save();
-    print(_product.title);
-    print(_product.description);
-    print(_product.price);
-    print(_product.imageUrl);
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      if (_product.id.isNotEmpty) {
+        Provider.of<ProductsProvider>(context, listen: false)
+            .updateProduct(_product.id, _product);
+      } else {
+        Provider.of<ProductsProvider>(context, listen: false)
+            .addProduct(_product);
+      }
+
+      Navigator.of(context).pop();
+    }
+  }
+
+  String? _requiredValidator(value) {
+    if (value != null && value.isEmpty) {
+      return 'Required';
+    }
+    return null;
   }
 
   @override
@@ -44,6 +85,8 @@ class _EditProductPageState extends State<EditProductPage> {
           child: Column(
             children: [
               TextFormField(
+                validator: _requiredValidator,
+                initialValue: _product.title,
                 decoration: InputDecoration(
                   labelText: 'Title',
                 ),
@@ -53,6 +96,8 @@ class _EditProductPageState extends State<EditProductPage> {
                 },
               ),
               TextFormField(
+                initialValue: _product.price.toString(),
+                validator: _requiredValidator,
                 decoration: InputDecoration(
                   labelText: 'Price',
                 ),
@@ -63,6 +108,8 @@ class _EditProductPageState extends State<EditProductPage> {
                 },
               ),
               TextFormField(
+                validator: _requiredValidator,
+                initialValue: _product.description,
                 decoration: InputDecoration(
                   labelText: 'Description',
                 ),
@@ -94,6 +141,7 @@ class _EditProductPageState extends State<EditProductPage> {
                   ),
                   Flexible(
                     child: TextFormField(
+                      validator: _requiredValidator,
                       controller: _imageUrlCtrl,
                       decoration: InputDecoration(
                         labelText: 'Image URL',

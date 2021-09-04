@@ -33,8 +33,12 @@ class UserProductsPage extends StatelessWidget {
             separatorBuilder: (_, index) => Divider(),
             itemCount: productsData.products.length,
             itemBuilder: (_, index) => UserProductItem(
+              id: productsData.products[index].id,
               title: productsData.products[index].title,
               imageUrl: productsData.products[index].imageUrl,
+              onDelete: (id) {
+                productsData.deleteProduct(id);
+              },
             ),
           ),
         ),
