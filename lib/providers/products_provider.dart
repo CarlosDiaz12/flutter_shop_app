@@ -1,16 +1,19 @@
 import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:flutter_shop_app/data/dummy_products.dart';
+import 'package:flutter_shop_app/data/services/product_service.dart';
 import 'package:flutter_shop_app/providers/product.dart';
 
 class ProductsProvider with ChangeNotifier {
+  ProductService _service = ProductService();
   List<Product> _products = DUMMY_PRODUCTS;
   List<Product> get products => [..._products];
   List<Product> get favoritesItems =>
       _products.where((p) => p.isFavorite).toList();
 
-  void addProduct(Product newProduct) {
-    final _newProduct = newProduct.copyWith(id: DateTime.now().toString());
+  void addProduct(Product newProduct) async {
+    var res = await _service.addProduct(newProduct);
+    final _newProduct = newProduct.copyWith(id: res);
     _products.add(_newProduct);
     notifyListeners();
   }

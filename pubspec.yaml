@@ -33,6 +33,8 @@ dependencies:
   dependencies:
   intl: ^0.17.0
 
+  # http
+  http: ^0.13.3
 dev_dependencies:
   flutter_test:
     sdk: flutter

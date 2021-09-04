@@ -43,12 +43,12 @@ class Product with ChangeNotifier {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
+      //'id': id,
       'title': title,
       'description': description,
-      'price': price,
+      'price': price.toString(),
       'imageUrl': imageUrl,
-      'isFavorite': isFavorite,
+      'isFavorite': isFavorite.toString(),
     };
   }
 
