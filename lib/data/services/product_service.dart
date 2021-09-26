@@ -36,4 +36,44 @@ class ProductService {
       rethrow;
     }
   }
+
+  Future<void> updateProduct(Product product) async {
+    try {
+      var response = await http.patch(
+          _url.replace(path: '/products/${product.id}.json'),
+          body: product.toJson());
+      if (response.statusCode != HttpStatus.ok) {
+        throw Exception("Error Updating Product");
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> deleteProduct(String id) async {
+    try {
+      var response = await http.delete(
+        _url.replace(path: '/products/$id.json'),
+      );
+      if (response.statusCode != HttpStatus.ok) {
+        throw Exception("Error Deleting Product");
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> toggleFavorite(String id, bool value) async {
+    try {
+      var response = await http.patch(_url.replace(path: '/products/$id.json'),
+          body: json.encode({
+            'isFavorite': value.toString(),
+          }));
+      if (response.statusCode != HttpStatus.ok) {
+        throw Exception("Error Updating Product");
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

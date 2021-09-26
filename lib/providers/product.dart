@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_shop_app/data/services/product_service.dart';
 
 class Product with ChangeNotifier {
   String id;
@@ -17,10 +18,17 @@ class Product with ChangeNotifier {
     required this.imageUrl,
     this.isFavorite = false,
   });
-
-  void toggleFavoriteStatus() {
-    isFavorite = !isFavorite;
-    notifyListeners();
+  ProductService _service = ProductService();
+  Future<void> toggleFavoriteStatus() async {
+    try {
+      isFavorite = !isFavorite;
+      notifyListeners();
+      await _service.toggleFavorite(id, isFavorite);
+    } catch (e) {
+      isFavorite = !isFavorite;
+      notifyListeners();
+      rethrow;
+    }
   }
 
   Product copyWith({
@@ -59,7 +67,7 @@ class Product with ChangeNotifier {
       description: map['description'],
       price: map['price'] != null ? double.parse(map['price']) : 0.0,
       imageUrl: map['imageUrl'],
-      isFavorite: bool.fromEnvironment(map['isFavorite']),
+      isFavorite: map['isFavorite'].toString().toLowerCase() == 'true',
     );
   }
 

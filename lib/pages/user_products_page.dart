@@ -27,18 +27,28 @@ class UserProductsPage extends StatelessWidget {
         ],
       ),
       body: Consumer<ProductsProvider>(
-        builder: (context, productsData, _) => Padding(
-          padding: EdgeInsets.all(8.0),
-          child: ListView.separated(
-            separatorBuilder: (_, index) => Divider(),
-            itemCount: productsData.products.length,
-            itemBuilder: (_, index) => UserProductItem(
-              id: productsData.products[index].id,
-              title: productsData.products[index].title,
-              imageUrl: productsData.products[index].imageUrl,
-              onDelete: (id) {
-                productsData.deleteProduct(id);
-              },
+        builder: (context, productsData, _) => RefreshIndicator(
+          onRefresh: productsData.fetchProducts,
+          child: Padding(
+            padding: EdgeInsets.all(8.0),
+            child: ListView.separated(
+              separatorBuilder: (_, index) => Divider(),
+              itemCount: productsData.products.length,
+              itemBuilder: (_, index) => UserProductItem(
+                id: productsData.products[index].id,
+                title: productsData.products[index].title,
+                imageUrl: productsData.products[index].imageUrl,
+                onDelete: (id) async {
+                  try {
+                    productsData.deleteProduct(id);
+                  } catch (e) {
+                    final snackBar = SnackBar(
+                        content: Text(e.toString()),
+                        backgroundColor: Theme.of(context).colorScheme.error);
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  }
+                },
+              ),
             ),
           ),
         ),

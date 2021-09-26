@@ -49,7 +49,7 @@ class _EditProductPageState extends State<EditProductPage> {
       if (_formKey.currentState!.validate()) {
         _formKey.currentState!.save();
         if (_product.id.isNotEmpty) {
-          Provider.of<ProductsProvider>(context, listen: false)
+          await Provider.of<ProductsProvider>(context, listen: false)
               .updateProduct(_product.id, _product);
         } else {
           await Provider.of<ProductsProvider>(context, listen: false)

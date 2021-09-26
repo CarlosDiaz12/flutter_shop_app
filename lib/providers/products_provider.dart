@@ -28,15 +28,18 @@ class ProductsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void updateProduct(String id, Product product) {
+  Future<void> updateProduct(String id, Product product) async {
     var index = _products.indexWhere((element) => element.id == id);
     if (index >= 0) {
+      product.copyWith(id: id);
       _products[index] = product;
+      await _service.updateProduct(product);
+      notifyListeners();
     }
-    notifyListeners();
   }
 
-  void deleteProduct(String id) {
+  Future<void> deleteProduct(String id) async {
+    await _service.deleteProduct(id);
     _products.removeWhere((element) => element.id == id);
     notifyListeners();
   }
