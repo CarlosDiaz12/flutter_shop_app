@@ -54,12 +54,12 @@ class Product with ChangeNotifier {
 
   factory Product.fromMap(Map<String, dynamic> map) {
     return Product(
-      id: map['id'],
+      id: "",
       title: map['title'],
       description: map['description'],
-      price: map['price'],
+      price: map['price'] != null ? double.parse(map['price']) : 0.0,
       imageUrl: map['imageUrl'],
-      isFavorite: map['isFavorite'],
+      isFavorite: bool.fromEnvironment(map['isFavorite']),
     );
   }
 

@@ -14,10 +14,25 @@ class ProductService {
         Map<String, dynamic> id = json.decode(response.body);
         return id['name'];
       }
-
       return DateTime.now().toString();
     } catch (e) {
-      print(e);
+      rethrow;
+    }
+  }
+
+  Future<List<Product>> fetchAllProducts() async {
+    try {
+      var response = await http.get(_url);
+      if (response.statusCode == HttpStatus.ok) {
+        var jsonData = json.decode(response.body) as Map<String, dynamic>;
+        return jsonData.entries
+            .map(
+              (e) => Product.fromMap(e.value).copyWith(id: e.key),
+            )
+            .toList();
+      }
+      throw Exception("Error Fetching Products");
+    } catch (e) {
       rethrow;
     }
   }

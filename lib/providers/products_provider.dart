@@ -6,12 +6,12 @@ import 'package:flutter_shop_app/providers/product.dart';
 
 class ProductsProvider with ChangeNotifier {
   ProductService _service = ProductService();
-  List<Product> _products = DUMMY_PRODUCTS;
+  List<Product> _products = [];
   List<Product> get products => [..._products];
   List<Product> get favoritesItems =>
       _products.where((p) => p.isFavorite).toList();
 
-  void addProduct(Product newProduct) async {
+  Future<void> addProduct(Product newProduct) async {
     var res = await _service.addProduct(newProduct);
     final _newProduct = newProduct.copyWith(id: res);
     _products.add(_newProduct);
@@ -20,6 +20,12 @@ class ProductsProvider with ChangeNotifier {
 
   Product getProductById(String productId) {
     return _products.firstWhere((p) => p.id == productId);
+  }
+
+  Future<void> fetchProducts() async {
+    var response = await _service.fetchAllProducts();
+    _products = response;
+    notifyListeners();
   }
 
   void updateProduct(String id, Product product) {

@@ -24,7 +24,7 @@ class _EditProductPageState extends State<EditProductPage> {
   );
 
   var _isInit = true;
-
+  var _isLoading = false;
   @override
   void didChangeDependencies() {
     if (_isInit) {
@@ -41,18 +41,33 @@ class _EditProductPageState extends State<EditProductPage> {
     super.didChangeDependencies();
   }
 
-  void _saveForm() {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-      if (_product.id.isNotEmpty) {
-        Provider.of<ProductsProvider>(context, listen: false)
-            .updateProduct(_product.id, _product);
-      } else {
-        Provider.of<ProductsProvider>(context, listen: false)
-            .addProduct(_product);
+  void _saveForm() async {
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+      if (_formKey.currentState!.validate()) {
+        _formKey.currentState!.save();
+        if (_product.id.isNotEmpty) {
+          Provider.of<ProductsProvider>(context, listen: false)
+              .updateProduct(_product.id, _product);
+        } else {
+          await Provider.of<ProductsProvider>(context, listen: false)
+              .addProduct(_product);
+        }
+        setState(() {
+          _isLoading = false;
+        });
+        Navigator.of(context).pop();
       }
-
-      Navigator.of(context).pop();
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      final snackBar = SnackBar(
+          content: Text(e.toString()),
+          backgroundColor: Theme.of(context).colorScheme.error);
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
 
@@ -78,93 +93,97 @@ class _EditProductPageState extends State<EditProductPage> {
           ),
         ],
       ),
-      body: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          child: Column(
-            children: [
-              TextFormField(
-                validator: _requiredValidator,
-                initialValue: _product.title,
-                decoration: InputDecoration(
-                  labelText: 'Title',
-                ),
-                textInputAction: TextInputAction.next,
-                onSaved: (value) {
-                  _product.title = value ?? '';
-                },
-              ),
-              TextFormField(
-                initialValue: _product.price.toString(),
-                validator: _requiredValidator,
-                decoration: InputDecoration(
-                  labelText: 'Price',
-                ),
-                keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.next,
-                onSaved: (value) {
-                  _product.price = double.parse(value ?? '0');
-                },
-              ),
-              TextFormField(
-                validator: _requiredValidator,
-                initialValue: _product.description,
-                decoration: InputDecoration(
-                  labelText: 'Description',
-                ),
-                maxLines: 3,
-                keyboardType: TextInputType.multiline,
-                textInputAction: TextInputAction.next,
-                onSaved: (value) {
-                  _product.description = value ?? '';
-                },
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Container(
-                    width: 100,
-                    height: 100,
-                    margin: EdgeInsets.only(top: 8, right: 10),
-                    decoration: BoxDecoration(
-                      border: Border.all(width: 1, color: Colors.grey),
-                    ),
-                    child: _imageUrlCtrl.text.isEmpty
-                        ? Text('Enter a URL')
-                        : FittedBox(
-                            child: Image.network(
-                              _imageUrlCtrl.text,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                  ),
-                  Flexible(
-                    child: TextFormField(
+      body: _isLoading
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : Form(
+              key: _formKey,
+              child: SingleChildScrollView(
+                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                child: Column(
+                  children: [
+                    TextFormField(
                       validator: _requiredValidator,
-                      controller: _imageUrlCtrl,
+                      initialValue: _product.title,
                       decoration: InputDecoration(
-                        labelText: 'Image URL',
+                        labelText: 'Title',
                       ),
-                      keyboardType: TextInputType.url,
-                      textInputAction: TextInputAction.done,
-                      onEditingComplete: () {
-                        setState(() {});
-                      },
-                      onFieldSubmitted: (_) {
-                        _saveForm();
-                      },
+                      textInputAction: TextInputAction.next,
                       onSaved: (value) {
-                        _product.imageUrl = value ?? '';
+                        _product.title = value ?? '';
                       },
                     ),
-                  ),
-                ],
-              )
-            ],
-          ),
-        ),
-      ),
+                    TextFormField(
+                      initialValue: _product.price.toString(),
+                      validator: _requiredValidator,
+                      decoration: InputDecoration(
+                        labelText: 'Price',
+                      ),
+                      keyboardType: TextInputType.number,
+                      textInputAction: TextInputAction.next,
+                      onSaved: (value) {
+                        _product.price = double.parse(value ?? '0');
+                      },
+                    ),
+                    TextFormField(
+                      validator: _requiredValidator,
+                      initialValue: _product.description,
+                      decoration: InputDecoration(
+                        labelText: 'Description',
+                      ),
+                      maxLines: 3,
+                      keyboardType: TextInputType.multiline,
+                      textInputAction: TextInputAction.next,
+                      onSaved: (value) {
+                        _product.description = value ?? '';
+                      },
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Container(
+                          width: 100,
+                          height: 100,
+                          margin: EdgeInsets.only(top: 8, right: 10),
+                          decoration: BoxDecoration(
+                            border: Border.all(width: 1, color: Colors.grey),
+                          ),
+                          child: _imageUrlCtrl.text.isEmpty
+                              ? Text('Enter a URL')
+                              : FittedBox(
+                                  child: Image.network(
+                                    _imageUrlCtrl.text,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                        ),
+                        Flexible(
+                          child: TextFormField(
+                            validator: _requiredValidator,
+                            controller: _imageUrlCtrl,
+                            decoration: InputDecoration(
+                              labelText: 'Image URL',
+                            ),
+                            keyboardType: TextInputType.url,
+                            textInputAction: TextInputAction.done,
+                            onEditingComplete: () {
+                              setState(() {});
+                            },
+                            onFieldSubmitted: (_) {
+                              _saveForm();
+                            },
+                            onSaved: (value) {
+                              _product.imageUrl = value ?? '';
+                            },
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
     );
   }
 }
