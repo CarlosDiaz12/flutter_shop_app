@@ -42,18 +42,9 @@ class CartPage extends StatelessWidget {
                       backgroundColor: Theme.of(context).primaryColor,
                     ),
                   ),
-                  OutlinedButton(
-                    onPressed: () {
-                      var orders =
-                          Provider.of<OrdersProvider>(context, listen: false);
-                      orders.addOrder(
-                        cart.cartItems.values.toList(),
-                        cart.totalAmount,
-                      );
-                      cart.clearCart();
-                    },
-                    child: Text('ORDER NOW'),
-                  )
+                  _OrderButton(
+                    cart: cart,
+                  ),
                 ],
               ),
             ),
@@ -70,6 +61,51 @@ class CartPage extends StatelessWidget {
           )
         ],
       ),
+    );
+  }
+}
+
+class _OrderButton extends StatefulWidget {
+  final CartProvider cart;
+  const _OrderButton({Key? key, required this.cart}) : super(key: key);
+
+  @override
+  State<_OrderButton> createState() => _OrderButtonState();
+}
+
+class _OrderButtonState extends State<_OrderButton> {
+  var _isLoading = false;
+  @override
+  Widget build(BuildContext context) {
+    return OutlinedButton(
+      onPressed: (widget.cart.cartItems.length <= 0 || _isLoading)
+          ? null
+          : () async {
+              try {
+                setState(() {
+                  _isLoading = true;
+                });
+                var orders =
+                    Provider.of<OrdersProvider>(context, listen: false);
+                await orders.addOrder(
+                  widget.cart.cartItems.values.toList(),
+                  widget.cart.totalAmount,
+                );
+                widget.cart.clearCart();
+                setState(() {
+                  _isLoading = false;
+                });
+              } catch (e) {
+                setState(() {
+                  _isLoading = false;
+                });
+                final snackBar = SnackBar(
+                    content: Text(e.toString()),
+                    backgroundColor: Theme.of(context).colorScheme.error);
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }
+            },
+      child: Text('ORDER NOW'),
     );
   }
 }
