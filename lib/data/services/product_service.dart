@@ -7,9 +7,13 @@ import 'package:http/http.dart' as http;
 class ProductService {
   final _url = Uri.https(
       'flutter-shop-app-4c34a-default-rtdb.firebaseio.com', '/products.json');
-  Future<String> addProduct(Product product) async {
+  Future<String> addProduct(Product product, String? token) async {
     try {
-      var response = await http.post(_url, body: product.toJson());
+      var response = await http.post(
+          _url.replace(queryParameters: {
+            'auth': token,
+          }),
+          body: product.toJson());
       if (response.statusCode == HttpStatus.ok) {
         Map<String, dynamic> id = json.decode(response.body);
         return id['name'];
@@ -20,14 +24,32 @@ class ProductService {
     }
   }
 
-  Future<List<Product>> fetchAllProducts() async {
+  Future<List<Product>> fetchAllProducts(String? token, String? userId) async {
     try {
-      var response = await http.get(_url);
+      var response = await http.get(_url.replace(queryParameters: {
+        'auth': token,
+      }));
       if (response.statusCode == HttpStatus.ok) {
-        var jsonData = json.decode(response.body) as Map<String, dynamic>;
+        var jsonData = json.decode(response.body) as Map<String, dynamic>?;
+        if (jsonData == null) return [];
+        var favoriteData = {};
+        var favoriteResponse = await http.get(
+            _url.replace(path: '/userFavorites/$userId.json', queryParameters: {
+          'auth': token,
+        }));
+
+        if (favoriteResponse.statusCode == HttpStatus.ok) {
+          favoriteData =
+              json.decode(favoriteResponse.body) as Map<String, dynamic>;
+        }
         return jsonData.entries
             .map(
-              (e) => Product.fromMap(e.value).copyWith(id: e.key),
+              (e) => Product.fromMap(e.value).copyWith(
+                id: e.key,
+                isFavorite: favoriteData.containsKey(e.key)
+                    ? favoriteData[e.key]
+                    : false,
+              ),
             )
             .toList();
       }
@@ -37,10 +59,12 @@ class ProductService {
     }
   }
 
-  Future<void> updateProduct(Product product) async {
+  Future<void> updateProduct(Product product, String? token) async {
     try {
       var response = await http.patch(
-          _url.replace(path: '/products/${product.id}.json'),
+          _url.replace(path: '/products/${product.id}.json', queryParameters: {
+            'auth': token,
+          }),
           body: product.toJson());
       if (response.statusCode != HttpStatus.ok) {
         throw Exception("Error Updating Product");
@@ -50,10 +74,12 @@ class ProductService {
     }
   }
 
-  Future<void> deleteProduct(String id) async {
+  Future<void> deleteProduct(String id, String? token) async {
     try {
       var response = await http.delete(
-        _url.replace(path: '/products/$id.json'),
+        _url.replace(path: '/products/$id.json', queryParameters: {
+          'auth': token,
+        }),
       );
       if (response.statusCode != HttpStatus.ok) {
         throw Exception("Error Deleting Product");
@@ -63,12 +89,18 @@ class ProductService {
     }
   }
 
-  Future<void> toggleFavorite(String id, bool value) async {
+  Future<void> toggleFavorite(
+      String id, bool value, String? token, String? userId) async {
     try {
-      var response = await http.patch(_url.replace(path: '/products/$id.json'),
-          body: json.encode({
-            'isFavorite': value.toString(),
-          }));
+      var response = await http.put(
+          _url.replace(
+              path: '/userFavorites/$userId/$id.json',
+              queryParameters: {
+                'auth': token,
+              }),
+          body: json.encode(
+            value,
+          ));
       if (response.statusCode != HttpStatus.ok) {
         throw Exception("Error Updating Product");
       }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_shop_app/providers/auth_provider.dart';
 import 'package:flutter_shop_app/providers/cart_provider.dart';
 import 'package:flutter_shop_app/providers/product.dart';
 import 'package:flutter_shop_app/pages/product_detail_page.dart';
@@ -11,7 +12,7 @@ class ProductItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(context, listen: false);
     final cart = Provider.of<CartProvider>(context, listen: false);
-
+    final _auth = Provider.of<Auth>(context, listen: false);
     return Material(
       elevation: 8.0,
       borderRadius: BorderRadius.circular(10.0),
@@ -35,7 +36,8 @@ class ProductItem extends StatelessWidget {
                 color: Theme.of(context).accentColor,
                 onPressed: () async {
                   try {
-                    await product.toggleFavoriteStatus();
+                    await product.toggleFavoriteStatus(
+                        _auth.token, _auth.userId);
                   } catch (e) {
                     final snackBar = SnackBar(
                         content: Text(e.toString()),

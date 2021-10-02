@@ -19,11 +19,11 @@ class Product with ChangeNotifier {
     this.isFavorite = false,
   });
   ProductService _service = ProductService();
-  Future<void> toggleFavoriteStatus() async {
+  Future<void> toggleFavoriteStatus(String? token, String? userId) async {
     try {
       isFavorite = !isFavorite;
       notifyListeners();
-      await _service.toggleFavorite(id, isFavorite);
+      await _service.toggleFavorite(id, isFavorite, token, userId);
     } catch (e) {
       isFavorite = !isFavorite;
       notifyListeners();
@@ -56,7 +56,7 @@ class Product with ChangeNotifier {
       'description': description,
       'price': price.toString(),
       'imageUrl': imageUrl,
-      'isFavorite': isFavorite.toString(),
+      //'isFavorite': isFavorite.toString(),
     };
   }
 
@@ -67,7 +67,7 @@ class Product with ChangeNotifier {
       description: map['description'],
       price: map['price'] != null ? double.parse(map['price']) : 0.0,
       imageUrl: map['imageUrl'],
-      isFavorite: map['isFavorite'].toString().toLowerCase() == 'true',
+      //isFavorite: map['isFavorite'].toString().toLowerCase() == 'true',
     );
   }
 

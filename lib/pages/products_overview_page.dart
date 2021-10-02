@@ -35,6 +35,14 @@ class _ProductsOverViewPageState extends State<ProductsOverViewPage> {
         setState(() {
           _isLoading = false;
         });
+      }).catchError((err) {
+        setState(() {
+          _isLoading = false;
+        });
+        final snackBar = SnackBar(
+            content: Text(err.toString()),
+            backgroundColor: Theme.of(context).colorScheme.error);
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
       });
     }
 

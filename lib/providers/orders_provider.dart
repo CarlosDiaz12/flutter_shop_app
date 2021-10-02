@@ -10,7 +10,12 @@ class OrdersProvider extends ChangeNotifier {
   OrderService _service = OrderService();
   List<OrderItem> _orders = [];
   List<OrderItem> get orders => [..._orders];
+  String? authToken;
 
+  OrdersProvider({
+    this.authToken,
+    List<OrderItem> orders = const [],
+  }) : _orders = orders;
   Future<void> addOrder(List<CartItem> cartProducts, double totalAmount) async {
     var order = OrderItem(
       id: '',
@@ -18,13 +23,13 @@ class OrdersProvider extends ChangeNotifier {
       amount: totalAmount,
       orderDate: DateTime.now(),
     );
-    var response = await _service.addOrder(order);
+    var response = await _service.addOrder(order, authToken);
     order.copyWith(id: response);
     notifyListeners();
   }
 
   Future<void> fetchOrders() async {
-    var response = await _service.fetchOrders();
+    var response = await _service.fetchOrders(authToken);
     _orders = response.reversed.toList();
     notifyListeners();
   }
