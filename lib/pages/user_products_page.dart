@@ -28,7 +28,7 @@ class UserProductsPage extends StatelessWidget {
       ),
       body: Consumer<ProductsProvider>(
         builder: (context, productsData, _) => RefreshIndicator(
-          onRefresh: productsData.fetchProducts,
+          onRefresh: () => productsData.fetchProducts(true),
           child: Padding(
             padding: EdgeInsets.all(8.0),
             child: ListView.separated(

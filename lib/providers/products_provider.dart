@@ -18,6 +18,7 @@ class ProductsProvider with ChangeNotifier {
     List<Product> products = const [],
   }) : _products = products;
   Future<void> addProduct(Product newProduct) async {
+    newProduct.creatorId = userId;
     var res = await _service.addProduct(newProduct, authToken);
     final _newProduct = newProduct.copyWith(id: res);
     _products.add(_newProduct);
@@ -28,8 +29,8 @@ class ProductsProvider with ChangeNotifier {
     return _products.firstWhere((p) => p.id == productId);
   }
 
-  Future<void> fetchProducts() async {
-    var response = await _service.fetchAllProducts(authToken, userId);
+  Future<void> fetchProducts(bool filter) async {
+    var response = await _service.fetchAllProducts(authToken, userId, filter);
     _products = response;
     notifyListeners();
   }

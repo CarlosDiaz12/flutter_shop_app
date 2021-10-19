@@ -11,9 +11,10 @@ class OrdersProvider extends ChangeNotifier {
   List<OrderItem> _orders = [];
   List<OrderItem> get orders => [..._orders];
   String? authToken;
-
+  String? userId;
   OrdersProvider({
     this.authToken,
+    this.userId,
     List<OrderItem> orders = const [],
   }) : _orders = orders;
   Future<void> addOrder(List<CartItem> cartProducts, double totalAmount) async {
@@ -23,13 +24,13 @@ class OrdersProvider extends ChangeNotifier {
       amount: totalAmount,
       orderDate: DateTime.now(),
     );
-    var response = await _service.addOrder(order, authToken);
+    var response = await _service.addOrder(order, authToken, userId);
     order.copyWith(id: response);
     notifyListeners();
   }
 
   Future<void> fetchOrders() async {
-    var response = await _service.fetchOrders(authToken);
+    var response = await _service.fetchOrders(authToken, userId);
     _orders = response.reversed.toList();
     notifyListeners();
   }

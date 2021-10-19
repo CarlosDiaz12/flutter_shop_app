@@ -24,11 +24,23 @@ class ProductService {
     }
   }
 
-  Future<List<Product>> fetchAllProducts(String? token, String? userId) async {
+  Future<List<Product>> fetchAllProducts(String? token, String? userId,
+      [bool filter = false]) async {
     try {
-      var response = await http.get(_url.replace(queryParameters: {
+      var _params = {
         'auth': token,
-      }));
+      };
+
+      var filterParams = {
+        'orderBy': '"creatorId"',
+        'equalTo': '"$userId"',
+      };
+      if (filter) {
+        _params.addAll(filterParams);
+      }
+
+      var editedUrl = _url.replace(queryParameters: _params);
+      var response = await http.get(editedUrl);
       if (response.statusCode == HttpStatus.ok) {
         var jsonData = json.decode(response.body) as Map<String, dynamic>?;
         if (jsonData == null) return [];

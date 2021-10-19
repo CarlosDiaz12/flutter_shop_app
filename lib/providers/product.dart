@@ -7,10 +7,12 @@ class Product with ChangeNotifier {
   String id;
   String title;
   String description;
+  String? creatorId;
   double price;
   String imageUrl;
   bool isFavorite;
   Product({
+    this.creatorId,
     required this.id,
     required this.title,
     required this.description,
@@ -38,8 +40,10 @@ class Product with ChangeNotifier {
     double? price,
     String? imageUrl,
     bool? isFavorite,
+    String? creatorId,
   }) {
     return Product(
+      creatorId: creatorId ?? this.creatorId,
       id: id ?? this.id,
       title: title ?? this.title,
       description: description ?? this.description,
@@ -56,12 +60,14 @@ class Product with ChangeNotifier {
       'description': description,
       'price': price.toString(),
       'imageUrl': imageUrl,
+      'creatorId': creatorId,
       //'isFavorite': isFavorite.toString(),
     };
   }
 
   factory Product.fromMap(Map<String, dynamic> map) {
     return Product(
+      creatorId: map['creatorId'],
       id: "",
       title: map['title'],
       description: map['description'],

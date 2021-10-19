@@ -31,7 +31,7 @@ class _ProductsOverViewPageState extends State<ProductsOverViewPage> {
       setState(() {
         _isLoading = true;
       });
-      Provider.of<ProductsProvider>(context).fetchProducts().then((_) {
+      Provider.of<ProductsProvider>(context).fetchProducts(false).then((_) {
         setState(() {
           _isLoading = false;
         });

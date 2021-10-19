@@ -7,10 +7,12 @@ class OrderService {
   final _url = Uri.https(
       'flutter-shop-app-4c34a-default-rtdb.firebaseio.com', '/orders.json');
 
-  Future<String> addOrder(OrderItem orderItem, String? token) async {
+  Future<String> addOrder(
+      OrderItem orderItem, String? token, String? userId) async {
     try {
       var response = await http.post(
           _url.replace(
+            path: '/orders/$userId.json',
             queryParameters: {
               'auth': token,
             },
@@ -27,17 +29,19 @@ class OrderService {
     }
   }
 
-  Future<List<OrderItem>> fetchOrders(String? token) async {
+  Future<List<OrderItem>> fetchOrders(String? token, String? userId) async {
     try {
       var response = await http.get(
         _url.replace(
+          path: '/orders/$userId.json',
           queryParameters: {
             'auth': token,
           },
         ),
       );
       if (response.statusCode == HttpStatus.ok) {
-        var jsonData = json.decode(response.body) as Map<String, dynamic>;
+        var jsonData = json.decode(response.body) as Map<String, dynamic>?;
+        if (jsonData == null) return [];
         return jsonData.entries
             .map(
               (e) => OrderItem.fromMap(e.value).copyWith(id: e.key),
