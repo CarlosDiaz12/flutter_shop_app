@@ -6,6 +6,7 @@ import 'package:flutter_shop_app/pages/edit_product_page.dart';
 import 'package:flutter_shop_app/pages/orders_page.dart';
 import 'package:flutter_shop_app/pages/product_detail_page.dart';
 import 'package:flutter_shop_app/pages/products_overview_page.dart';
+import 'package:flutter_shop_app/pages/splash_screen.dart';
 import 'package:flutter_shop_app/pages/user_products_page.dart';
 import 'package:flutter_shop_app/providers/auth_provider.dart';
 import 'package:flutter_shop_app/providers/cart_provider.dart';
@@ -50,9 +51,18 @@ class App extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: 'Shop App',
           theme: AppTheme.theme,
-          initialRoute: authData.isLoggedIn
-              ? ProductsOverViewPage.routeName
-              : AuthPage.routeName,
+          home: authData.isLoggedIn
+              ? ProductsOverViewPage()
+              : FutureBuilder(
+                  future: authData.tryAutoLoging(),
+                  builder: (ctx, authResult) =>
+                      authResult.connectionState == ConnectionState.waiting
+                          ? SplashScreen()
+                          : AuthPage(),
+                ),
+          // initialRoute: authData.isLoggedIn
+          //     ? ProductsOverViewPage.routeName
+          //     : AuthPage.routeName,
           routes: {
             ProductDetailPage.routeName: (ctx) => ProductDetailPage(),
             CartPage.routeName: (ctx) => CartPage(),
@@ -60,7 +70,7 @@ class App extends StatelessWidget {
             UserProductsPage.routeName: (ctx) => UserProductsPage(),
             EditProductPage.routeName: (ctx) => EditProductPage(),
             AuthPage.routeName: (ctx) => AuthPage(),
-            ProductsOverViewPage.routeName: (ctx) => ProductsOverViewPage(),
+            // ProductsOverViewPage.routeName: (ctx) => ProductsOverViewPage(),
           },
         ),
       ),

@@ -46,9 +46,13 @@ class ProductService {
         if (jsonData == null) return [];
         var favoriteData = {};
         var favoriteResponse = await http.get(
-            _url.replace(path: '/userFavorites/$userId.json', queryParameters: {
-          'auth': token,
-        }));
+          _url.replace(
+            path: '/userFavorites/$userId.json',
+            queryParameters: {
+              'auth': token,
+            },
+          ),
+        );
 
         if (favoriteResponse.statusCode == HttpStatus.ok) {
           favoriteData =
