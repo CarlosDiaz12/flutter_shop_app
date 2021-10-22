@@ -34,35 +34,41 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
               icon: Icon(_isExpanded ? Icons.expand_less : Icons.expand_more),
             ),
           ),
-          if (_isExpanded)
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
-              height: min(widget.item.products.length * 20.0 + 20, 100),
-              child: ListView.builder(
-                itemCount: widget.item.products.length,
-                itemBuilder: (ctx, index) {
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        widget.item.products[index].title,
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        '${widget.item.products[index].quantity}x \$${widget.item.products[index].price}',
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              ),
+          AnimatedContainer(
+            duration: Duration(milliseconds: 250),
+            constraints: BoxConstraints(
+              maxHeight: _isExpanded
+                  ? min(widget.item.products.length * 20.0 + 20, 100)
+                  : 0.0,
             ),
+            curve: Curves.easeIn,
+            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+            height: min(widget.item.products.length * 20.0 + 20, 100),
+            child: ListView.builder(
+              itemCount: widget.item.products.length,
+              itemBuilder: (ctx, index) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      widget.item.products[index].title,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      '${widget.item.products[index].quantity}x \$${widget.item.products[index].price}',
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
         ],
       ),
     );
